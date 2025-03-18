@@ -95,7 +95,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         timer.start();
 
         // Initialize countdown timer
-        timerLabel = new JLabel("Time Left: 02:00", SwingConstants.CENTER);
+        timerLabel = new JLabel("02:00", SwingConstants.CENTER);
         timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         timerLabel.setForeground(Color.WHITE);
         add(timerLabel);
@@ -105,7 +105,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
             if (countdownTime >= 0) {
                 int minutes = countdownTime / 60;
                 int seconds = countdownTime % 60;
-                timerLabel.setText(String.format("Time Left: %02d:%02d", minutes, seconds));
+                timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
             } else {
                 countdownTimer.stop();
                 JOptionPane.showMessageDialog(this, "Time's up! Game Over.", "Game Over", JOptionPane.INFORMATION_MESSAGE);
