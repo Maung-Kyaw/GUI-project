@@ -217,6 +217,7 @@ private boolean isTileGrass(int row, int col) {
                                    mouseY >= patientY && mouseY < patientY + tileSize;
         if (isVanNear && clickedOnPatient) {
             new TaskFrame();
+            isPatientFollowing= true;
         }
     }
 
