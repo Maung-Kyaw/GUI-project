@@ -33,37 +33,48 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     private int speed = 5; // Movement speed in pixels per update
     private char direction = ' '; // Van's current direction
     private Image vanImage;
-    private Image patientImage;
     private Image doorImage;
+    private Image tree;
     private Timer timer;
     private HashMap<Character, Image> tileImages;
     
-    private boolean isPatientFollowing = false; // Tracks if patient follows the van
-private int followSpeed = 5; // Speed at which the patient moves
+    private Image[] patientImages = new Image[5];
 
+    private int[] patientXarray = {13 * tileSize, 8 * tileSize, 21 * tileSize, 21 * tileSize, 3 * tileSize};
+    private int[]patientYarray = {7 * tileSize, 16 * tileSize, 15 * tileSize, 2 * tileSize, 11 * tileSize};
+    private boolean[] isPatientFollowingarray = new boolean[5];
+    
+    private int prevVanX, prevVanY;
+    
+    private boolean isPatientFollowing = false; // Tracks if patient follows the van
+    private int followSpeed = 1; // Speed at which the patient moves
     
     private int patientX = 13 * tileSize; // Patient's X position (on grass area)
     private int patientY = 7 * tileSize; // Patient's Y position (on grass area)
+    
+    private int countdownTime = 120; // 2 minutes in seconds
+    private JLabel timerLabel; // Label to display the timer
+    private Timer countdownTimer; // Timer for the countdown
 
     // Tile map
     private String[] tileMap = {
     "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWGGGGGWWWWWWWWWWWWWWWWW",
-    "WWWGGGGGWWWWWWWWWWWWWWWWW",
-    "WWWGGGGGWWWWWWWWWWWWWWWWW",
-    "WWWGGGGGWWWWWWWWWWWWWWWWW",
+    "WWWGGGGGWWWWWWWWWWGGGGGWW",
+    "WWWGGGGGWWWWWWWWWWGGGGGWW",
+    "WWWGGGGGWWWWWWWWWWGGGGGWW",
+    "WWWGGGGGWWWWWWGGGGGGWWWWW",
     "WWWWWWGGGGGGGGGGGGGGGGWWW",
     "WWWWWWWWWWGGGGGGGGGGGGGGW",
     "WWWWWWWWWWWWWGGGGGGGGGGGW",
-    "WWWWWWWWWWWWWWWGGGGGGGGGW",
-    "WWWWWWWWWWWWWWWGGGGGGGGGW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
-    "WWWWWWWWWWWWWWWWWWWWWWWWW",
+    "WWWWGGGGWWWWWWWGGGGGGGGGW",
+    "WWWGGGGGGWWWWWWGGGGGGGGGW",
+    "WWGGGGGGGWWWWWWWWWWWGWWWW",
+    "WWGGGGGGGGGWWWWGGGGGGGGWW",
+    "WWGGGGGGGGGWWWWGGGGGGGGWW",
+    "WWGGGGGGGGGGGGGGGGGGGGGWW",
+    "WWWGGGGGGGGWWWWGGGGGGGGWW",
+    "WWWWWGGGGGWWWWWGGGGGGGGWW",
+    "WWWWWWGGGGWWWWWWWWWWWWWWW",
     "WWWWWWWWWWWWWWWWWWWWWWWWW",
     "WWWWWWWWWWWWWWWWWWWWWWWWW"
 };
@@ -73,33 +84,59 @@ private int followSpeed = 5; // Speed at which the patient moves
         tileImages = new HashMap<>();
         tileImages.put('W', new ImageIcon("src/main/java/Project3_6581147/Assets/water.png").getImage());
         tileImages.put('G', new ImageIcon("src/main/java/Project3_6581147/Assets/grass.png").getImage());
-        //tileImages.put('D', new ImageIcon("src/main/java/Project3_6581147/Assets/Doors.png").getImage());
+        //tileImages.put('q', new ImageIcon("src/main/java/Project3_6581147/Assets/grassq.png").getImage());
         tileImages.put(' ', null); // Empty space
 
-        // Load van image
-        vanImage = new ImageIcon("src/main/java/Project3_6581147/Assets/van.png").getImage();
-        patientImage= new ImageIcon("src/main/java/Project3_6581147/Assets/patient.png").getImage();
 
-        // Set up the panel
+        vanImage = new ImageIcon("src/main/java/Project3_6581147/Assets/van.png").getImage();
+
+        /*patient1Image= new ImageIcon("src/main/java/Project3_6581147/Assets/patient1.png").getImage();
+        patient2Image= new ImageIcon("src/main/java/Project3_6581147/Assets/patient2.png").getImage();
+        patient3Image= new ImageIcon("src/main/java/Project3_6581147/Assets/patient3.png").getImage();
+        patient4Image= new ImageIcon("src/main/java/Project3_6581147/Assets/patient4.png").getImage();
+        patient5Image= new ImageIcon("src/main/java/Project3_6581147/Assets/patient5.png").getImage();*/
+        
+        patientImages[0] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient1.png").getImage();
+        patientImages[1] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient2.png").getImage();
+        patientImages[2] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient3.png").getImage();
+        patientImages[3] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient4.png").getImage();
+        patientImages[4] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient5.png").getImage();
+        tree= new ImageIcon("src/main/java/Project3_6581147/Assets/tree.png").getImage();
+
         setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
-        setBackground(Color.BLACK);
+        setBackground(new Color(156,212,200));
         addKeyListener(this);
         addMouseListener(this); 
         setFocusable(true);
-        
-        addMouseListener(this); 
-        setFocusable(true);
-
-        // Initialize timer for smooth movement
-        timer = new Timer(50, this); // Update every 50ms (20 FPS)
+       
+        timer = new Timer(50, this);
         timer.start();
+        
+        timerLabel = new JLabel("02:00", SwingConstants.CENTER);
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timerLabel.setForeground(Color.WHITE);
+        add(timerLabel);
+
+        countdownTimer = new Timer(1000, e -> {
+            countdownTime--;
+            if (countdownTime >= 0) {
+                int minutes = countdownTime / 60;
+                int seconds = countdownTime % 60;
+                timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
+            } else {
+                countdownTimer.stop();
+                JOptionPane.showMessageDialog(this, "Time is up.\nSadly, you cannot help all of them. TT", "Bye Bye", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
+        });
+        countdownTimer.start();
+        
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Draw the grid
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 char tile = tileMap[i].charAt(j);
@@ -107,19 +144,32 @@ private int followSpeed = 5; // Speed at which the patient moves
 
                 if (tileImage != null) {
                     g.drawImage(tileImage, j * tileSize, i * tileSize, tileSize, tileSize, this);
-                } else {
-                    g.setColor(Color.BLACK);
                 }
             }
         }
 
-        // Draw the van
         g.drawImage(vanImage, vanX, vanY, tileSize, tileSize, this);
-        g.drawImage(patientImage, patientX, patientY, tileSize, tileSize, this);
         
         doorImage = new ImageIcon("src/main/java/Project3_6581147/Assets/Doors.png").getImage();
-        g.drawImage(doorImage, 19*tileSize, 8*tileSize, tileSize, tileSize,this);
+        g.drawImage(doorImage, 19*tileSize, 8*tileSize, tileSize, tileSize, this);
+        
+        /*g.drawImage(patient2Image, 8*tileSize, 16*tileSize, tileSize, tileSize,this);
+        g.drawImage(patient3Image, 21*tileSize, 15*tileSize, tileSize, tileSize,this);
+        g.drawImage(patient4Image, 21*tileSize, 2*tileSize, tileSize, tileSize,this);
+        g.drawImage(patient5Image, 3*tileSize, 11*tileSize, tileSize, tileSize,this);*/
+       
+        for (int i = 0; i < 5; i++) {
+            g.drawImage(patientImages[i], patientXarray[i], patientYarray[i], tileSize, tileSize, this);
+        }
 
+        
+        g.drawImage(tree, 9*tileSize, 15*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 9*tileSize, 16*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 7*tileSize, 16*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 6*tileSize, 16*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 7*tileSize, 15*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 6*tileSize, 15*tileSize, tileSize, tileSize,this);
+        g.drawImage(tree, 5*tileSize, 15*tileSize, tileSize, tileSize,this);
     }
 
     @Override
@@ -153,6 +203,9 @@ private int followSpeed = 5; // Speed at which the patient moves
 public void actionPerformed(ActionEvent e) {
     int newX = vanX;
     int newY = vanY;
+    
+    int currentVanX = vanX;
+    int currentVanY = vanY;
 
     // Update new position based on direction
     switch (direction) {
@@ -169,19 +222,16 @@ public void actionPerformed(ActionEvent e) {
     }
     
     if (isPatientFollowing) {
-        if (patientX < vanX) patientX += followSpeed;
-        else if (patientX > vanX) patientX -= followSpeed;
-
-        if (patientY < vanY) patientY += followSpeed;
-        else if (patientY > vanY) patientY -= followSpeed;
+        patientX = prevVanX;
+        patientY = prevVanY;
     }
+
+    // Update the previous van position for the next frame
+    prevVanX = currentVanX;
+    prevVanY = currentVanY;
 
 
     repaint();
-    
-    /*if (Math.abs(vanX - patientX) < tileSize && Math.abs(vanY - patientY) < tileSize) {
-            new TaskFrame();
-        }*/
 }
 
 // Method to check if the van is on grass ('G')
@@ -206,20 +256,24 @@ private boolean isTileGrass(int row, int col) {
 }
 
 
-
     @Override
-    public void mousePressed(MouseEvent e) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
+public void mousePressed(MouseEvent e) {
+    int mouseX = e.getX();
+    int mouseY = e.getY();
 
-        boolean isVanNear = Math.abs(vanX - patientX) <= tileSize && Math.abs(vanY - patientY) <= tileSize;
-        boolean clickedOnPatient = mouseX >= patientX && mouseX < patientX + tileSize &&
-                                   mouseY >= patientY && mouseY < patientY + tileSize;
+    for (int i = 0; i < 5; i++) {
+        boolean isVanNear = Math.abs(vanX - patientXarray[i]) <= tileSize && Math.abs(vanY - patientYarray[i]) <= tileSize;
+        boolean clickedOnPatient = mouseX >= patientXarray[i] && mouseX < patientXarray[i] + tileSize &&
+                                   mouseY >= patientYarray[i] && mouseY < patientYarray[i]+ tileSize;
+
         if (isVanNear && clickedOnPatient) {
             new TaskFrame();
-            isPatientFollowing= true;
+            isPatientFollowingarray[i] = true;
+            break; 
         }
     }
+}
+
 
     // Unused MouseListener methods (required for implementation)
     @Override public void mouseClicked(MouseEvent e) {}
