@@ -1,89 +1,106 @@
-package Final;
+package Project3_6581147;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class MainApplication extends JFrame {
-    private JButton startButton, creditsButton, quitButton;
+public class MainApplication {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new StartFrame());
+    }
+}
 
-    public MainApplication() {
-        setTitle("Ambulance Maze Game");
-        setSize(800, 600);
+class StartFrame extends JFrame {
+    public StartFrame() {
+        setTitle("Start Screen");
+        setSize(700, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Load the background image
-        ImageIcon backgroundImage = new ImageIcon("background.jpg"); // Replace with your image path
-        JLabel backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setLayout(new GridBagLayout()); // Use GridBagLayout to center the buttons
-
-        // Main menu panel
-        JPanel menuPanel = new JPanel();
-        menuPanel.setLayout(new GridLayout(3, 1, 10, 10)); // 3 rows, 1 column, with spacing
-        menuPanel.setOpaque(false); // Make the panel transparent
+        // Set a background panel
+        BackgroundPanel backgroundPanel = new BackgroundPanel();
+        backgroundPanel.setLayout(new GridBagLayout());
+        add(backgroundPanel, BorderLayout.CENTER);
 
         // Create buttons
-        startButton = new JButton("Start Game");
-        creditsButton = new JButton("Credits");
-        quitButton = new JButton("Quit");
+        JButton startButton = new JButton(new ImageIcon("src/main/java/Project3_6581147/Assets/button.png"));
+        JButton teamButton = new JButton("Team Members");
+        JButton exitButton = new JButton("Exit");
 
-        // Style buttons
-        startButton.setFont(new Font("Arial", Font.BOLD, 24));
-        creditsButton.setFont(new Font("Arial", Font.BOLD, 24));
-        quitButton.setFont(new Font("Arial", Font.BOLD, 24));
+        startButton.setBorderPainted(false);
+        startButton.setContentAreaFilled(false);
+        startButton.setFocusPainted(false);
+        
+        teamButton.setPreferredSize(new Dimension(150, 40));
+        exitButton.setPreferredSize(new Dimension(150, 40));
 
-        // Add buttons to the menu panel
-        menuPanel.add(startButton);
-        menuPanel.add(creditsButton);
-        menuPanel.add(quitButton);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(10, 0, 10, 0); 
 
-        // Add the menu panel to the background label
-        backgroundLabel.add(menuPanel);
+        gbc.gridy = 0;
+        backgroundPanel.add(startButton, gbc);
 
-        // Add the background label to the frame
-        add(backgroundLabel, BorderLayout.CENTER);
+        gbc.gridy = 1;
+        backgroundPanel.add(teamButton, gbc);
 
-        // Event handlers
-        startButton.addActionListener(e -> startGame());
-        creditsButton.addActionListener(e -> showCredits());
-        quitButton.addActionListener(e -> quitGame());
-    }
+        gbc.gridy = 2;
+        backgroundPanel.add(exitButton, gbc);
 
-    private void startGame() {
-        // Step 1: Ask for player name
-        String playerName = JOptionPane.showInputDialog(this, "Enter your name:", "Player Name", JOptionPane.PLAIN_MESSAGE);
-
-        // If the player cancels the name input, stop here
-        if (playerName == null || playerName.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Name cannot be empty. Please try again.");
-            return;
-        }
-
-        // Step 2: Start the game
-        JOptionPane.showMessageDialog(this, 
-            "Starting game for " + playerName + ".");
-        // Logic to start the game will go here
-    }
-
-    private void showCredits() {
-        JOptionPane.showMessageDialog(this, 
-            "Credits:\n" +
-            "John Doe (ID: 12345)\n" +
-            "Jane Smith (ID: 67890)\n" +
-            "Group Project 3 - Ambulance Maze Game");
-    }
-
-    private void quitGame() {
-        int confirm = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to quit?", "Quit Game", JOptionPane.YES_NO_OPTION);
-        if (confirm == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new MainApplication().setVisible(true);
+        startButton.addActionListener(e -> {
+            dispose();
+            new RescuePanel(); 
         });
+
+        teamButton.addActionListener(e -> new TeamFrame()); 
+
+        exitButton.addActionListener(e -> System.exit(0)); 
+
+        setVisible(true);
+    }
+}
+
+class TeamFrame extends JFrame {
+    public TeamFrame() {
+        setTitle("Team Members");
+        setSize(300, 200);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel member1 = new JLabel("6581147 Trinnaya Damrongpatharawat");
+        JLabel member2 = new JLabel("6581053 Jinjutha Yolsirivat");
+        JLabel member3 = new JLabel("6581178 Kyaw Zin Thant");
+        JLabel member4 = new JLabel("6481227 Chartwut Piriyapanyaporn");
+        JLabel member5 = new JLabel("66802511 Phurilap Kitlertpaisan");
+
+        panel.add(member1);
+        panel.add(member2);
+        panel.add(member3);
+        panel.add(member4);
+        panel.add(member5);
+
+        add(panel);
+        setVisible(true);
+    }
+}
+
+
+class BackgroundPanel extends JPanel {
+    private Image background;
+
+    public BackgroundPanel() {
+        //background = new ImageIcon("src/main/java/Project3_6581147/Assets/background.png").getImage();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 }
