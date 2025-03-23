@@ -40,7 +40,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     private boolean gameStarted = false; // Tracks if game has started
     private Image menuImage; // Holds menu.png
     private boolean[] isPatientRescued = new boolean[5]; // Track rescued patients
-    private boolean isDialogueActive = false; // Track if dialogue is showing
+    protected static boolean isDialogueActive = false; // Track if dialogue is showing
     private Image dialogueImage; // Store the dialogue image
     private Image[] patientImages = new Image[5];
 
@@ -56,6 +56,10 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     int doorY = 8 * tileSize;
     
     private int currentPatientIndex = -1;
+    private static boolean[] isPatientCorrectlyTreated = new boolean[5];
+    public static void setPatientTreated(int index, boolean isCorrect) {
+        isPatientCorrectlyTreated[index] = isCorrect;
+    }
     
     private int patientX = 13 * tileSize; 
     private int patientY = 7 * tileSize; 
@@ -120,7 +124,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         add(timerLabel);
 
 
-        
+
     }
 
     @Override
@@ -199,6 +203,17 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
             }
         }
     }
+    
+private void calculateFinalScore() {
+    int correctRescues = 0;
+    for (int i = 0; i < 5; i++) {
+        if (isPatientRescued[i] && isPatientCorrectlyTreated[i]) {
+            correctRescues++;
+        }
+    }
+    
+    JOptionPane.showMessageDialog(null, "You have rescued " + correctRescues + " pets !");
+}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -206,15 +221,15 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         
         if (!gameStarted && key == KeyEvent.VK_ENTER) {
             gameStarted = true;
-            timer.start(); // Start game timer
-            startCountdown(); // Start countdown
+            timer.start();
+            startCountdown(); 
             repaint();
             return;
         }
         
         if (isDialogueActive && key == KeyEvent.VK_ENTER) {
-            isDialogueActive = false; // Close dialogue
-            new TaskFrame(); // Open TaskFrame
+            TaskFrame taskFrame=new TaskFrame(currentPatientIndex);
+            taskFrame.setLocation(950, 300);
             repaint();
     }
 
@@ -233,9 +248,10 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
                 timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
             } else {
                 countdownTimer.stop();
-                JOptionPane.showMessageDialog(this, "Time is up.\nSadly, you cannot help all of them. TT", "Bye Bye", JOptionPane.INFORMATION_MESSAGE);
+                calculateFinalScore();
                 System.exit(0);
             }
+            repaint();
         });
         countdownTimer.start();
     }
@@ -274,25 +290,22 @@ public void actionPerformed(ActionEvent e) {
         vanY = newY;
     }
 
-    // Move the patient behind the van
     for (int i = 0; i < patientXarray.length; i++) {
         if (isPatientFollowingarray[i]) {
             patientXarray[i] = prevVanX;
             patientYarray[i] = prevVanY;
 
-            // Check if the patient reaches the door
             if (Math.abs(patientXarray[i] - doorX) < tileSize && 
-                Math.abs(patientYarray[i] - doorY) < tileSize && isDialogueActive==false) {
-                JOptionPane.showMessageDialog(this, "This patient is rescued !");
+                Math.abs(patientYarray[i] - doorY) < tileSize && isDialogueActive == false) {
+
+                JOptionPane.showMessageDialog(this, "This pet is in vet's undercare!");
                 isPatientFollowingarray[i] = false;
-                isPatientRescued[i] = true;
+
+                if (isPatientCorrectlyTreated[i]) {
+                    isPatientRescued[i] = true;
+                }
             }
-            
-            if (isPatientRescued[0]==true&&isPatientRescued[1]==true&&
-                isPatientRescued[2]==true&&isPatientRescued[3]==true&&isPatientRescued[4]==true) { 
-                JOptionPane.showMessageDialog(this, "All patients have been rescued! 🎉");
-                System.exit(0); 
-            }
+
         }
     }
 
@@ -347,7 +360,7 @@ public void mousePressed(MouseEvent e) {
         if (isVanNear && clickedOnPatient) {
             currentPatientIndex = i;
             isPatientFollowingarray[i] = true;
-            isDialogueActive = true; // Show dialogue first
+            isDialogueActive = true;
             repaint();
             break;
         }
