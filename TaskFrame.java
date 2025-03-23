@@ -16,14 +16,14 @@ public class TaskFrame extends JFrame implements ActionListener {
     private int currentPatientIndex;
 
     private static final Map<Integer, String[]> correctAnswers = new HashMap<>();
-    private static boolean[] isPatientCorrectlyTreated = new boolean[5]; // Track task completion
+    private static boolean[] isPatientCorrectlyTreated = new boolean[5]; 
 
     static {
-        correctAnswers.put(0, new String[]{"Whiskers", "Cow", "Forest", "Dr. Patel (Dermatology)"}); 
-        correctAnswers.put(1, new String[]{"Bella", "Duck", "Hills", "Dr. Jones (Surgery)"}); 
-        correctAnswers.put(2, new String[]{"Max", "Sheep", "Desert", "Dr. Brown (Orthopedics)"}); 
-        correctAnswers.put(3, new String[]{"Coco", "Chick", "Chicken House", "Dr. Lee (Toxicology)"}); 
-        correctAnswers.put(4, new String[]{"Rocky", "Pig", "Beach", "Dr. Smith (ER Vet)"}); 
+        correctAnswers.put(0, new String[]{"Whiskers", "Cow", "Skin Infection", "Dr. Patel (Dermatology)"}); 
+        correctAnswers.put(1, new String[]{"Chirpy", "Chick", "Tooth Decay", "Dr. Lee (Dentistry)"}); 
+        correctAnswers.put(2, new String[]{"Oinky", "Pig", "Ankle Dislocation", "Dr. Brown (Orthopedics)"}); 
+        correctAnswers.put(3, new String[]{"Coco", "Sheep", "Food Poisonous", "Dr. Jones (Toxicology)"}); 
+        correctAnswers.put(4, new String[]{"Clucky", "Duck", "Heart Condition", "Dr. Smith (ER vet, Cardiology)"}); 
     }
 
     public TaskFrame(int patientIndex) {
@@ -50,12 +50,12 @@ public class TaskFrame extends JFrame implements ActionListener {
         }
 
         // Location ComboBox
-        String[] locations = {"Desert", "Chicken House", "Forest", "Beach", "Hills"};
+        String[] locations = {"Heart Condition", "Tooth Decay", "Skin Infection", "Food Poisonous", "Ankle Dislocation"};
         locationComboBox = new JComboBox<>(locations);
         add(locationComboBox);
 
         // Vet List
-        String[] vets = {"Dr. Smith (ER Vet)", "Dr. Jones (Surgery)", "Dr. Lee (Toxicology)", "Dr. Patel (Dermatology)", "Dr. Brown (Orthopedics)"};
+        String[] vets = {"Dr. Smith (ER vet, Cardiology)", "Dr. Jones (Toxicology)", "Dr. Lee (Dentistry)", "Dr. Patel (Dermatology)", "Dr. Brown (Orthopedics)"};
         vetList = new JList<>(vets);
         add(new JScrollPane(vetList));
 
