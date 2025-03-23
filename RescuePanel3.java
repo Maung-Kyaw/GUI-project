@@ -217,19 +217,28 @@ private final String[] playerDoctors = new String[5];
     int patientX = patientXarray[currentPatientIndex];
     int patientY = patientYarray[currentPatientIndex];
 
-    // Position the dialogue box near the patient
-    int dialogX = patientX + 30;  // Slightly to the right of the patient
-    int dialogY = patientY - 50;  // Slightly above the patient
+    int dialogX, dialogY;
 
-    // Prevent the dialogue box from going off-screen
-    if (dialogX + dialogWidth > getWidth()) {
-        dialogX = getWidth() - dialogWidth - 10;
-    }
+    // Default position: Above the patient
+    dialogX = patientX;
+    dialogY = patientY - dialogHeight - 10;
+
+    // If it goes off-screen at the top, place it below the patient
     if (dialogY < 0) {
-        dialogY = 10;
+        dialogY = patientY + tileSize + 10;
     }
 
-    // Draw dialogue box at calculated position
+    // If it goes off-screen at the right, move it to the left of the patient
+    if (dialogX + dialogWidth > getWidth()) {
+        dialogX = patientX - dialogWidth - 10;
+    }
+
+    // If it goes off-screen at the left, adjust slightly to the right
+    if (dialogX < 0) {
+        dialogX = 10;
+    }
+
+    // Draw the dialogue box at the calculated position
     g.drawImage(dialogueImage, dialogX, dialogY, dialogWidth, dialogHeight, this);
 
     // Display patient's message
@@ -242,7 +251,7 @@ private final String[] playerDoctors = new String[5];
         case 4: message = "I'm Oinky...\nMy tummy hurts!"; break;
     }
 
-    // Split message into multiple lines and display text
+    // Split message into multiple lines
     String[] lines = message.split("\n");
     int lineHeight = 20;
     int textX = dialogX + 20;
