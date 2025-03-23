@@ -280,7 +280,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     
     private void drawInstructions(Graphics g) {
 
-        g.setColor(Color.WHITE); 
+        g.setColor(new Color(163,123,94)); 
         g.setFont(new Font("Arial", Font.BOLD, 20)); 
 
         int boxX = 250;
