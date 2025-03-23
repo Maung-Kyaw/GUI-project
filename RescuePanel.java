@@ -1,4 +1,8 @@
-package Project3_6581147;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package project3_6581178;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +29,31 @@ public class RescuePanel extends JFrame {
 }
 
 class GamePanel extends JPanel implements ActionListener, KeyListener, MouseListener {
+    
+    // Correct answers
+private final String[] correctNames = {"Chirpy", "Clucky", "MooMoo", "Barkster", "Oinky"};
+private final String[] correctSpecies = {"Bird", "Chicken", "Cow", "Dog", "Pig"};
+private final String[] correctSickness = {
+    "Heart Condition",
+    "Skin Infection",
+    "Tooth Decay",
+    "Ankle Dislocation",
+    "Food Poisonous"
+};
+private final String[] correctDoctors = {
+    "Dr. Patel (Cardiology)",
+    "Dr. Smith (General Vet)",
+    "Dr. Lee (Dentistry)",
+    "Dr. Brown (Orthopedics)",
+    "Dr. Jones (Gastroenterology)"
+};
+
+// Player inputs
+private final String[] playerNames = new String[5];
+private final String[] playerSpecies = new String[5];
+private final String[] playerSickness = new String[5];
+private final String[] playerDoctors = new String[5];
+
     private int tileSize = 40; 
     private int rows = 19; 
     private int cols = 25; 
@@ -40,7 +69,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     private boolean gameStarted = false; // Tracks if game has started
     private Image menuImage; // Holds menu.png
     private boolean[] isPatientRescued = new boolean[5]; // Track rescued patients
-    protected static boolean isDialogueActive = false; // Track if dialogue is showing
+    private boolean isDialogueActive = false; // Track if dialogue is showing
+
     private Image dialogueImage; // Store the dialogue image
     private Image[] patientImages = new Image[5];
 
@@ -56,10 +86,6 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     int doorY = 8 * tileSize;
     
     private int currentPatientIndex = -1;
-    private static boolean[] isPatientCorrectlyTreated = new boolean[5];
-    public static void setPatientTreated(int index, boolean isCorrect) {
-        isPatientCorrectlyTreated[index] = isCorrect;
-    }
     
     private int patientX = 13 * tileSize; 
     private int patientY = 7 * tileSize; 
@@ -68,6 +94,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     
     private JLabel timerLabel; 
     private Timer countdownTimer; 
+   
 
     private String[] tileMap = {
     "WWWWWWWWWWWWWWWWWWWWWWWWW",
@@ -77,7 +104,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     "WWWGGGGGWWWWWWGGGGGGWWWWW",
     "WWWWWWGGGGGGGGGGGGGGGGWWW",
     "WWWWWWWWWWGGGGGGGGGGGGGGW",
-    "WWWWWWWWWWWWWGGGGGGGGGGGW",
+    "WWWWWWWWWWWWWGGGGGGGGGGWW",
     "WWWWGGGGWWWWWWWGGGGGGGGGW",
     "WWWGGGGGGWWWWWWGGGGGGGGGW",
     "WWGGGGGGGWWWWWWWWWWWGWWWW",
@@ -92,22 +119,26 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
 };
 
     public GamePanel() {
+        
+
         tileImages = new HashMap<>();
-         menuImage = new ImageIcon("src/main/java/Project3_6581147/Assets/menu.png").getImage();
-        tileImages.put('W', new ImageIcon("src/main/java/Project3_6581147/Assets/water.png").getImage());
-        tileImages.put('G', new ImageIcon("src/main/java/Project3_6581147/Assets/grass.png").getImage());
-        //tileImages.put('q', new ImageIcon("src/main/java/Project3_6581147/Assets/grassq.png").getImage());
+         menuImage = new ImageIcon("src/main/java/project3_6581178/Assets/menu.png").getImage();
+        tileImages.put('W', new ImageIcon("src/main/java/project3_6581178/Assets/water.png").getImage());
+        tileImages.put('G', new ImageIcon("src/main/java/project3_6581178/Assets/grass.png").getImage());
+        //tileImages.put('q', new ImageIcon("src/main/java/project3_6581178/Assets/grassq.png").getImage());
         tileImages.put(' ', null); 
         
-        vanImage = new ImageIcon("src/main/java/Project3_6581147/Assets/van.png").getImage();
+        vanImage = new ImageIcon("src/main/java/project3_6581178/Assets/van.png").getImage();
         
-        patientImages[0] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient1.png").getImage();
-        patientImages[1] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient2.png").getImage();
-        patientImages[2] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient3.png").getImage();
-        patientImages[3] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient4.png").getImage();
-        patientImages[4] = new ImageIcon("src/main/java/Project3_6581147/Assets/patient5.png").getImage();
-        tree= new ImageIcon("src/main/java/Project3_6581147/Assets/tree.png").getImage();
-        dialogueImage = new ImageIcon("src/main/java/Project3_6581147/Assets/dialogue.png").getImage();
+        patientImages[0] = new ImageIcon("src/main/java/project3_6581178/Assets/patient1.png").getImage();
+        patientImages[1] = new ImageIcon("src/main/java/project3_6581178/Assets/patient2.png").getImage();
+        patientImages[2] = new ImageIcon("src/main/java/project3_6581178/Assets/patient3.png").getImage();
+        patientImages[3] = new ImageIcon("src/main/java/project3_6581178/Assets/patient4.png").getImage();
+        patientImages[4] = new ImageIcon("src/main/java/project3_6581178/Assets/patient5.png").getImage();
+        tree= new ImageIcon("src/main/java/project3_6581178/Assets/tree.png").getImage();
+        dialogueImage = new ImageIcon("src/main/java/project3_6581178/Assets/dialogue.png").getImage();
+        
+
 
 
         setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
@@ -124,7 +155,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         add(timerLabel);
 
 
-
+        
     }
 
     @Override
@@ -160,7 +191,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
 
         g.drawImage(vanImage, vanX, vanY, tileSize, tileSize, this);
         
-        doorImage = new ImageIcon("src/main/java/Project3_6581147/Assets/Doors.png").getImage();
+        doorImage = new ImageIcon("src/main/java/project3_6581178/Assets/Doors.png").getImage();
         g.drawImage(doorImage, 19*tileSize, 8*tileSize, tileSize, tileSize, this);
 
         for (int i = 0; i < 5; i++) {
@@ -176,44 +207,44 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         g.drawImage(tree, 5*tileSize, 15*tileSize, tileSize, tileSize,this);
         
         if (isDialogueActive) {
-            int dialogWidth = 300; 
-            int dialogHeight = 150; 
-            int x = (getWidth() - dialogWidth) / 2; 
-            int y = (getHeight() - dialogHeight) / 2; 
-            g.drawImage(dialogueImage, x, y, dialogWidth, dialogHeight, this);
-            
-            String message = "";
-            if (currentPatientIndex == 1) {
-                message = "Help me, please! \nI'm ";
-            } else if (currentPatientIndex == 0) {
-                message = "I'm Whiskers. \nI've been scratching for hours.";
-            } else if (currentPatientIndex == 2) {
-                message = "My leg hurts!";
-            } else if (currentPatientIndex == 3) {
-                message = "My teeth hurt!";
-            } else {
-                message = "Thank you for coming!";
-            }
-            String[] lines = message.split("\n");
-            int lineHeight=20;
-            int lineY=350;
-            for (String line : lines) {
-                g.drawString(line, 400, lineY);
-                lineY += lineHeight; 
-            }
-        }
+    int dialogWidth = 300;
+    int dialogHeight = 150;
+    int x = (getWidth() - dialogWidth) / 2;
+    int y = (getHeight() - dialogHeight) / 2;
+    g.drawImage(dialogueImage, x, y, dialogWidth, dialogHeight, this);
+
+    String message = "";
+    switch (currentPatientIndex) {
+        case 0:
+            message = "I'm Chirpy...\nI feel dizzy when I flap my wings!";
+            break;
+        case 1:
+            message = "I'm Clucky...\nI can't stop pecking, it's so itchy!";
+            break;
+        case 2:
+            message = "I'm MooMoo...\nMy teeth hurt when I chew.";
+            break;
+        case 3:
+            message = "I'm Barkster...\nI hurt my leg jumping the fence.";
+            break;
+        case 4:
+            message = "I'm Oinky...\nMy tummy hurts from bad food!";
+            break;
+        default:
+            message = "Hello there!";
     }
-    
-private void calculateFinalScore() {
-    int correctRescues = 0;
-    for (int i = 0; i < 5; i++) {
-        if (isPatientRescued[i] && isPatientCorrectlyTreated[i]) {
-            correctRescues++;
-        }
+
+    String[] lines = message.split("\n");
+    int lineHeight = 20;
+    int lineY = y + 50;
+    for (String line : lines) {
+        g.setColor(Color.BLACK); // Set text color if needed
+        g.drawString(line, x + 30, lineY);
+        lineY += lineHeight;
     }
-    
-    JOptionPane.showMessageDialog(null, "You have rescued " + correctRescues + " pets !");
 }
+
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -221,17 +252,19 @@ private void calculateFinalScore() {
         
         if (!gameStarted && key == KeyEvent.VK_ENTER) {
             gameStarted = true;
-            timer.start();
-            startCountdown(); 
+            timer.start(); // Start game timer
+            startCountdown(); // Start countdown
             repaint();
             return;
         }
         
-        if (isDialogueActive && key == KeyEvent.VK_ENTER) {
-            TaskFrame taskFrame=new TaskFrame(currentPatientIndex);
-            taskFrame.setLocation(950, 300);
-            repaint();
-    }
+       if (isDialogueActive && key == KeyEvent.VK_ENTER) {
+    isDialogueActive = false;
+   
+    new TaskFrame(currentPatientIndex, this);         // ✅ Open TaskFrame with patient index
+    repaint();
+}
+
 
         if (key == KeyEvent.VK_W) direction = 'U'; 
         if (key == KeyEvent.VK_S) direction = 'D'; 
@@ -248,10 +281,9 @@ private void calculateFinalScore() {
                 timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
             } else {
                 countdownTimer.stop();
-                calculateFinalScore();
+                JOptionPane.showMessageDialog(this, "Time is up.\nSadly, you cannot help all of them. TT", "Bye Bye", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
-            repaint();
         });
         countdownTimer.start();
     }
@@ -271,13 +303,12 @@ private void calculateFinalScore() {
     public void keyTyped(KeyEvent e) {}
 
     @Override
+
 public void actionPerformed(ActionEvent e) {
     int newX = vanX;
     int newY = vanY;
 
-    int currentVanX = vanX;
-    int currentVanY = vanY;
-
+    // Move van based on direction
     switch (direction) {
         case 'U': if (vanY > 0) newY -= speed; break;
         case 'D': if (vanY < rows * tileSize - tileSize) newY += speed; break;
@@ -290,29 +321,32 @@ public void actionPerformed(ActionEvent e) {
         vanY = newY;
     }
 
-    for (int i = 0; i < patientXarray.length; i++) {
-        if (isPatientFollowingarray[i]) {
-            patientXarray[i] = prevVanX;
-            patientYarray[i] = prevVanY;
+    // Check if the van is near a patient to show dialogue automatically
+// Determine if the van is near any patient
+boolean foundDialogue = false;
 
-            if (Math.abs(patientXarray[i] - doorX) < tileSize && 
-                Math.abs(patientYarray[i] - doorY) < tileSize && isDialogueActive == false) {
+for (int i = 0; i < patientXarray.length; i++) {
+    if (isPatientRescued[i]) continue; // skip already rescued patients
 
-                JOptionPane.showMessageDialog(this, "This pet is in vet's undercare!");
-                isPatientFollowingarray[i] = false;
+    boolean isVanNear = Math.abs(vanX - patientXarray[i]) < tileSize &&
+                        Math.abs(vanY - patientYarray[i]) < tileSize;
 
-                if (isPatientCorrectlyTreated[i]) {
-                    isPatientRescued[i] = true;
-                }
-            }
-
-        }
+    if (isVanNear) {
+        currentPatientIndex = i;
+        isDialogueActive = true;
+        foundDialogue = true;
+        break; // only show one dialogue at a time
     }
+}
 
-    prevVanX = currentVanX;
-    prevVanY = currentVanY;
+// If van is not near any patient, hide dialogue
+if (!foundDialogue) {
+    isDialogueActive = false;
+    currentPatientIndex = -1;
+}
 
-    repaint();
+repaint(); // keep this at the end
+
 }
 
 
@@ -340,32 +374,60 @@ public void mousePressed(MouseEvent e) {
     int mouseX = e.getX();
     int mouseY = e.getY();
 
-    // If a patient is already following, don't allow selecting another one
-    for (boolean following : isPatientFollowingarray) {
-        if (following) {
-            return;
-        }
-    }
-
-    // Check if a patient was clicked and start following
     for (int i = 0; i < patientXarray.length; i++) {
         if (isPatientRescued[i]) {
             continue; // Skip rescued patients
         }
-        boolean isVanNear = Math.abs(vanX - patientXarray[i]) <= tileSize &&
-                            Math.abs(vanY - patientYarray[i]) <= tileSize;
+
         boolean clickedOnPatient = mouseX >= patientXarray[i] && mouseX < patientXarray[i] + tileSize &&
                                    mouseY >= patientYarray[i] && mouseY < patientYarray[i] + tileSize;
 
-        if (isVanNear && clickedOnPatient) {
-            currentPatientIndex = i;
-            isPatientFollowingarray[i] = true;
-            isDialogueActive = true;
+        if (clickedOnPatient) {
+            new TaskFrame(currentPatientIndex, this);
+
+            isPatientFollowingarray[i] = true; // Start following after task
             repaint();
             break;
         }
     }
 }
+public void savePlayerInput(int index, String name, String species, String cause, String doctor) {
+    playerNames[index] = name;
+    playerSpecies[index] = species;
+    playerSickness[index] = cause;
+    playerDoctors[index] = doctor;
+}
+
+private void checkWinCondition() {
+    boolean allCorrect = true;
+    StringBuilder result = new StringBuilder();
+
+    for (int i = 0; i < 5; i++) {
+        boolean correct =
+            playerNames[i] != null && playerNames[i].equalsIgnoreCase(correctNames[i]) &&
+            playerSpecies[i] != null && playerSpecies[i].contains(correctSpecies[i]) &&
+            playerSickness[i] != null && playerSickness[i].equals(correctSickness[i]) &&
+            playerDoctors[i] != null && playerDoctors[i].equals(correctDoctors[i]);
+
+        if (!correct) {
+            allCorrect = false;
+            result.append("❌ ").append(correctNames[i]).append(":\n")
+                  .append("   Expected Doctor: ").append(correctDoctors[i]).append("\n")
+                  .append("   You chose: ").append(playerDoctors[i]).append("\n\n");
+        }
+    }
+
+    if (allCorrect) {
+        JOptionPane.showMessageDialog(this, "🎉 All patients diagnosed correctly! You win!");
+    } else {
+        JOptionPane.showMessageDialog(this, "😢 Some mistakes were made:\n\n" + result.toString(), "Try Again", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    System.exit(0);
+}
+
+
+
 
     @Override public void mouseClicked(MouseEvent e) {}
     @Override public void mouseReleased(MouseEvent e) {}
