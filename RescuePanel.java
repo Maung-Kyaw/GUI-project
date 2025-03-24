@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
-
 public class RescuePanel extends JFrame {
     public RescuePanel() {
         setTitle("Farmland Rush");
@@ -32,18 +31,20 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     private int vanY = 1*tileSize; 
     private int speed = 5; 
     private char direction = ' '; 
-    private Image vanImage;
+    Image vanImage;
     private Image doorImage;
     private Image woodenhouseImage;
     private Image flowerImage;
     private Image tree;
     private Timer timer;
+    private Image waterImage;
+    private Image decoImage;
     private HashMap<Character, Image> tileImages;
-    private boolean gameStarted = false; // Tracks if game has started
-    private Image menuImage; // Holds menu.png
-    private boolean[] isPatientRescued = new boolean[5]; // Track rescued patients
-    protected static boolean isDialogueActive = false; // Track if dialogue is showing
-    private Image dialogueImage; // Store the dialogue image
+    private boolean gameStarted = false; 
+    private Image menuImage; 
+    private boolean[] isPatientRescued = new boolean[5]; 
+    protected static boolean isDialogueActive = false; 
+    private Image dialogueImage; 
     private Image[] patientImages = new Image[5];
 
     private int[] patientXarray = {13 * tileSize, 8 * tileSize, 21 * tileSize, 21 * tileSize, 3 * tileSize};
@@ -59,6 +60,7 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     
     private int currentPatientIndex = -1;
     private static boolean[] isPatientCorrectlyTreated = new boolean[5];
+    
     public static void setPatientTreated(int index, boolean isCorrect) {
         isPatientCorrectlyTreated[index] = isCorrect;
     }
@@ -109,10 +111,9 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
 
     public GamePanel() {
         tileImages = new HashMap<>();
-         menuImage = new ImageIcon("src/main/java/Project3_6581147/Assets/menu.png").getImage();
+        menuImage = new ImageIcon("src/main/java/Project3_6581147/Assets/menu.png").getImage();
         tileImages.put('W', new ImageIcon("src/main/java/Project3_6581147/Assets/water.png").getImage());
         tileImages.put('G', new ImageIcon("src/main/java/Project3_6581147/Assets/grass.png").getImage());
-        //tileImages.put('q', new ImageIcon("src/main/java/Project3_6581147/Assets/grassq.png").getImage());
         tileImages.put(' ', null); 
         
         vanImage = new ImageIcon("src/main/java/Project3_6581147/Assets/van.png").getImage();
@@ -138,8 +139,6 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         timerLabel.setForeground(Color.WHITE);
         add(timerLabel);
-
-
 
     }
 
@@ -174,7 +173,37 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
                 }
             }
         }
-
+        
+        waterImage= new ImageIcon("src/main/java/Project3_6581147/Assets/water.png").getImage();
+        g.drawImage(waterImage, 20*tileSize, 10*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/bridge.png").getImage();
+        g.drawImage(decoImage, 20*tileSize, 388, 32, 70, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence8.png").getImage();
+        g.drawImage(decoImage, 21*tileSize, 3*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence1.png").getImage();
+        g.drawImage(decoImage, 22*tileSize, 3*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence2.png").getImage();
+        g.drawImage(decoImage, 22*tileSize, 2*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence3.png").getImage();
+        g.drawImage(decoImage, 22*tileSize, 1*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence4.png").getImage();
+        g.drawImage(decoImage, 21*tileSize, 1*tileSize, tileSize, tileSize, this);
+        g.drawImage(decoImage, 20*tileSize, 1*tileSize, tileSize, tileSize, this);
+        g.drawImage(decoImage, 19*tileSize, 1*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence5.png").getImage();
+        g.drawImage(decoImage, 18*tileSize, 1*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence6.png").getImage();
+        g.drawImage(decoImage, 18*tileSize, 2*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/fence7.png").getImage();
+        g.drawImage(decoImage, 18*tileSize, 3*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/Paths.png").getImage();
+        g.drawImage(decoImage, 6*tileSize, 11*tileSize, tileSize, tileSize, this);
+        g.drawImage(decoImage, 15*tileSize, 5*tileSize, tileSize, tileSize, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/dirt.png").getImage();
+        g.drawImage(decoImage, 17*tileSize, 13*tileSize, 120, 100, this);
+        decoImage= new ImageIcon("src/main/java/Project3_6581147/Assets/chickenhouse.png").getImage();
+        g.drawImage(decoImage, 3*tileSize, 13*tileSize, 90, 90, this);
+        
         woodenhouseImage= new ImageIcon("src/main/java/Project3_6581147/Assets/woodencorner.png").getImage();
         g.drawImage(woodenhouseImage, 21*tileSize, 8*tileSize, tileSize, tileSize, this);
         woodenhouseImage= new ImageIcon("src/main/java/Project3_6581147/Assets/woodencorner1.png").getImage();
@@ -214,7 +243,34 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
         flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/sunflower.png").getImage();
         g.drawImage(flowerImage, 4*tileSize, 10*tileSize, 30, 60,this);
         g.drawImage(flowerImage, 7*tileSize, 2*tileSize, 30, 60,this);
-        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/sunflower.png").getImage();
+        g.drawImage(flowerImage, 15*tileSize, 11*tileSize, 30, 60,this);
+        g.drawImage(flowerImage, 23*tileSize, 5*tileSize, 30, 60,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/rock.png").getImage();
+        g.drawImage(flowerImage, 13*tileSize, 10*tileSize,30,20,this);
+        g.drawImage(flowerImage, 2*tileSize, 5*tileSize,30,20,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/lotus.png").getImage();
+        g.drawImage(flowerImage, 3*tileSize, 6*tileSize, 30, 30,this);
+        g.drawImage(flowerImage, 14*tileSize, 2*tileSize, 30, 30,this);
+        g.drawImage(flowerImage, 20*tileSize, 17*tileSize, 30, 30,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/plant1.png").getImage();
+        g.drawImage(flowerImage, 19*tileSize, 14*tileSize,26, 26,this);
+        g.drawImage(flowerImage, 17*tileSize, 14*tileSize,26, 26,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/plant2.png").getImage();
+        g.drawImage(flowerImage, 19*tileSize, 13*tileSize,26, 26,this);
+        g.drawImage(flowerImage, 18*tileSize, 13*tileSize,26, 26,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/m.png").getImage();
+        g.drawImage(flowerImage, 22*tileSize, 14*tileSize,28, 28,this);
+        g.drawImage(flowerImage, 5*tileSize, 8*tileSize,28, 28,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/flower.png").getImage();
+        g.drawImage(flowerImage, 8*tileSize, 9*tileSize,25, 25,this);
+        g.drawImage(flowerImage, 5*tileSize, 15*tileSize,25, 25,this);
+        g.drawImage(flowerImage, 22*tileSize, 7*tileSize,25, 25,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/flower2.png").getImage();
+        g.drawImage(flowerImage, 7*tileSize, 10*tileSize,25, 25,this);
+        g.drawImage(flowerImage, 3*tileSize, 4*tileSize,25, 25,this);
+        flowerImage= new ImageIcon("src/main/java/Project3_6581147/Assets/flower3.png").getImage();
+        g.drawImage(flowerImage, 10*tileSize, 6*tileSize,25, 25,this);
+        g.drawImage(flowerImage, 6*tileSize, 16*tileSize,25, 25,this);
         
         tree= new ImageIcon("src/main/java/Project3_6581147/Assets/tree.png").getImage();
         g.drawImage(tree, 9*tileSize, 15*tileSize, 60, 60,this);
@@ -280,7 +336,8 @@ class GamePanel extends JPanel implements ActionListener, KeyListener, MouseList
     
     private void drawInstructions(Graphics g) {
 
-        g.setColor(new Color(163,123,94)); 
+        //g.setColor(new Color(163,123,94)); 
+        g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 20)); 
 
         int boxX = 250;
@@ -309,7 +366,6 @@ private void calculateFinalScore() {
             correctRescues++;
         }
     }
-
         if (correctRescues==5){
             JOptionPane.showMessageDialog(null, "You win! You have helped all of them");
         }
@@ -395,8 +451,6 @@ public void actionPerformed(ActionEvent e) {
 
     for (int i = 0; i < patientXarray.length; i++) {
        
-  
-        
         if (isPatientFollowingarray[i]) {
             patientXarray[i] = prevVanX;
             patientYarray[i] = prevVanY;
@@ -434,10 +488,7 @@ public void actionPerformed(ActionEvent e) {
                     calculateFinalScore();
                     System.exit(0);
                 }
-                    
-
             }
-
         }
     }
 
