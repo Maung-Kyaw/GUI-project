@@ -38,7 +38,6 @@ public class TaskFrame extends JFrame implements ActionListener {
         petNameField = new JTextField("Enter Pet Name");
         add(petNameField);
 
-        // Animal RadioButtons
         animalRadioButtons = new JRadioButton[5];
         String[] animals = {"Duck", "Cow", "Sheep", "Chick", "Pig"};
         ButtonGroup animalGroup = new ButtonGroup();
@@ -49,17 +48,14 @@ public class TaskFrame extends JFrame implements ActionListener {
             add(animalRadioButtons[i]);
         }
 
-        // Location ComboBox
         String[] locations = {"Heart Condition", "Tooth Decay", "Skin Infection", "Food Poisonous", "Ankle Dislocation"};
         locationComboBox = new JComboBox<>(locations);
         add(locationComboBox);
 
-        // Vet List
         String[] vets = {"Dr. Smith (ER vet, Cardiology)", "Dr. Jones (Toxicology)", "Dr. Lee (Dentistry)", "Dr. Patel (Dermatology)", "Dr. Brown (Orthopedics)"};
         vetList = new JList<>(vets);
         add(new JScrollPane(vetList));
 
-        // Submit Button
         submitButton = new JButton("Submit");
         submitButton.addActionListener(this);
         add(submitButton);
@@ -68,15 +64,13 @@ public class TaskFrame extends JFrame implements ActionListener {
     }
 
     @Override
-public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
     if (e.getSource() == submitButton) {
-        // Get user inputs
         String enteredName = petNameField.getText().trim();
         String selectedAnimal = getSelectedAnimal();
         String selectedLocation = (String) locationComboBox.getSelectedItem();
         String selectedVet = vetList.getSelectedValue();
 
-        // Retrieve correct answers from map
         String[] correct = correctAnswers.get(currentPatientIndex);
         if (correct != null 
             && enteredName.equalsIgnoreCase(correct[0]) 
@@ -84,7 +78,7 @@ public void actionPerformed(ActionEvent e) {
             && selectedLocation.equalsIgnoreCase(correct[2]) 
             && selectedVet.equalsIgnoreCase(correct[3])) {
             
-            GamePanel.setPatientTreated(currentPatientIndex, true); // Mark as correctly treated
+            GamePanel.setPatientTreated(currentPatientIndex, true); 
         }
 
         JOptionPane.showMessageDialog(this, "Let's take this pet to the vet!");
@@ -92,7 +86,6 @@ public void actionPerformed(ActionEvent e) {
         dispose(); 
     }
 }
-
 
     private String getSelectedAnimal() {
         for (JRadioButton button : animalRadioButtons) {
@@ -103,11 +96,4 @@ public void actionPerformed(ActionEvent e) {
         return "";
     }
 
-    private boolean checkCorrectAnswers(String name, String animal, String location, String vet) {
-        String[] correct = correctAnswers.get(currentPatientIndex);
-        return correct[0].equalsIgnoreCase(name) &&
-               correct[1].equalsIgnoreCase(animal) &&
-               correct[2].equalsIgnoreCase(location) &&
-               correct[3].equalsIgnoreCase(vet);
-    }
 }
