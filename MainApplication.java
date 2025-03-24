@@ -2,8 +2,6 @@ package Project3_6581147;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainApplication {
     public static void main(String[] args) {
@@ -19,12 +17,10 @@ class StartFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Set a background panel
         BackgroundPanel backgroundPanel = new BackgroundPanel();
         backgroundPanel.setLayout(new GridBagLayout());
         add(backgroundPanel, BorderLayout.CENTER);
 
-        // Create buttons
         JButton startButton = new JButton(new ImageIcon("src/main/java/Project3_6581147/Assets/button.png"));
         JButton teamButton = new JButton("Team Members");
         JButton exitButton = new JButton("Exit");
@@ -41,13 +37,19 @@ class StartFrame extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(10, 0, 10, 0); 
 
+        JLabel titleLabel = new JLabel("Farmland Rush");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        titleLabel.setForeground(Color.BLACK);
         gbc.gridy = 0;
-        backgroundPanel.add(startButton, gbc);
+        backgroundPanel.add(titleLabel, gbc);
 
         gbc.gridy = 1;
-        backgroundPanel.add(teamButton, gbc);
+        backgroundPanel.add(startButton, gbc);
 
         gbc.gridy = 2;
+        backgroundPanel.add(teamButton, gbc);
+
+        gbc.gridy = 3;
         backgroundPanel.add(exitButton, gbc);
 
         startButton.addActionListener(e -> {
@@ -90,17 +92,10 @@ class TeamFrame extends JFrame {
     }
 }
 
-
 class BackgroundPanel extends JPanel {
-    private Image background;
-
-    public BackgroundPanel() {
-        //background = new ImageIcon("src/main/java/Project3_6581147/Assets/background.png").getImage();
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
     }
 }
